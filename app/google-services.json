@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "571057944694",
+    "firebase_url": "https://attendacesystemforstudent.firebaseio.com",
+    "project_id": "attendacesystemforstudent",
+    "storage_bucket": "attendacesystemforstudent.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:571057944694:android:70be6d5353a467dbefc757",
+        "android_client_info": {
+          "package_name": "com.tara.attendanceforstudent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "571057944694-67olob5kis3qdbfnmd5703htbm442kt2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tara.attendanceforstudent",
+            "certificate_hash": "41d3c9293ad1b893c40f8f2a562429e224a95f8b"
+          }
+        },
+        {
+          "client_id": "571057944694-s747r3ls02rnfvst9c9kiqj2v91t76kv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8U7m8ZN5Pvbtz4PhD0yGqGw6TAGO2HhY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "571057944694-s747r3ls02rnfvst9c9kiqj2v91t76kv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
