@@ -2,8 +2,12 @@ package com.tara.attendanceforstudent.Activities.Teacher;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -27,8 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     TextView tvregistrationforteacher;
     FirebaseFirestore firestore;
     String username, password;
-
-
+    private static final int PERMISSION_REQUEST_CODE = 200;
     
 
     @Override
@@ -36,11 +39,34 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         firestore = FirebaseFirestore.getInstance();
+        if (checkPermission()) {
+            //main logic or main code
+
+            // . write your main code to execute, It will execute if the permission is already given.
+
+        } else {
+            requestPermission();
+        }
+
         init();
 
     }
 
+    private void requestPermission() {
 
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.CAMERA},
+                PERMISSION_REQUEST_CODE);
+    }
+
+    private boolean checkPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            return false;
+        }
+        return true;
+    }
 
     private void init() {
 

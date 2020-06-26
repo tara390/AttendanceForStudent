@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tara.attendanceforstudent">
 
+    <uses-permission android:name="android.permission.CAMERA"/>
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -17,6 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/MyTheme">
         <activity android:name=".Activities.Student.AddNewStudentActivity">
+
         </activity>
         <activity android:name=".Activities.Student.AddStudentActivity">
         </activity>

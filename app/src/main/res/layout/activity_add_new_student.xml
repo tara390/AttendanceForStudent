@@ -1,24 +1,290 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Activities.Student.AddNewStudentActivity">
+    android:layout_height="match_parent">
 
-
-    <ImageView
-        android:id="@+id/ivback"
-        android:layout_width="30dp"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:src="@drawable/ic_baseline_arrow_back_24"
+        android:background="@color/colorwhite"
+        android:fitsSystemWindows="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ivbackpressed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+              android:src="@drawable/ic_baseline_arrow_back_24" />
+
+
+            <ImageView
+                android:id="@+id/ivdone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="right"
+                android:padding="10dp"
+                android:src="@drawable/ic_baseline_done_24" />
+
+        </RelativeLayout>
+
+
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:id="@+id/llforimage"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="vertical"
+
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appbar"
+        app:layout_constraintVertical_bias="0.0">
+
+
+        <ImageView
+            android:id="@+id/ivcaptureforstudent"
+            android:layout_width="50dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_baseline_person_24" />
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView2"
+
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent"
+        android:layout_marginTop="150dp"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/llforimage"
+        app:layout_constraintVertical_bias="0.546" >
 
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="true"
+            android:focusableInTouchMode="true"
+            android:focusable="false"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tifirstname"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+                android:theme="@style/MyFilledBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etfirstname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="First Name"
+                    android:inputType="textCapWords|textCapSentences"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textSize="12sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilastname"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+
+                android:theme="@style/MyFilledBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etlastname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Last Name"
+                    android:inputType="textCapWords|textCapSentences"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textSize="12sp" />
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:paddingTop="5dp"
+                android:text="@string/Department"
+                android:textColor="@color/colorPrimary"
+                android:textSize="12sp" />
+
+            <Spinner
+                android:id="@+id/spdepartment"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:padding="5dp"
+                android:prompt="@string/Department"
+                android:spinnerMode="dropdown"
+                android:textAlignment="textStart" />
+
+
+            <TextView
+                android:id="@+id/tvsem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:paddingTop="5dp"
+                android:text="@string/Sem"
+                android:textColor="@color/colorPrimary"
+                android:textSize="12sp" />
+
+            <Spinner
+                android:id="@+id/spsem"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:padding="5dp"
+                android:prompt="@string/Department"
+                android:spinnerMode="dropdown"
+                android:textAlignment="textStart" />
+
+            <TextView
+                android:id="@+id/tvDiv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:paddingTop="5dp"
+                android:text="@string/Div"
+                android:textColor="@color/colorPrimary"
+                android:textSize="12sp" />
+
+            <Spinner
+                android:id="@+id/spDiv"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:padding="5dp"
+                android:prompt="@string/Department"
+                android:spinnerMode="dropdown"
+                android:textAlignment="textStart" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilmobileno"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+                android:theme="@style/MyFilledBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edmobile_no"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Mobile No"
+                    android:inputType="phone"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textSize="12sp" />
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilparentmobileno"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+                android:theme="@style/MyFilledBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etparentsmobileno"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Parents Mobile No"
+                    android:inputType="phone"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textSize="12sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tiladdresses"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+                android:theme="@style/MyFilledBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edaddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Postal Address"
+                    android:inputType="textPostalAddress"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textSize="12sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilemail"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+                android:theme="@style/MyFilledBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etemail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Email"
+                    android:inputType="textEmailAddress"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textSize="12sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tvfigerprint"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:padding="5dp"
+                android:theme="@style/MyFilledBox"
+                android:layout_marginLeft="30dp"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                android:text="Add your Fingerprint" />
+
+
+
+        </LinearLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
