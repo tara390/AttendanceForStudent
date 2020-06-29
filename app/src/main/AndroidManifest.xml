@@ -3,6 +3,10 @@
     package="com.tara.attendanceforstudent">
 
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
+    <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
+    <uses-feature android:name="android.hardware.fingerprint" android:required="true" />
+
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"

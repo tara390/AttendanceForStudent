@@ -1,22 +1,36 @@
 package com.tara.attendanceforstudent.Activities.Student;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.hardware.biometrics.BiometricPrompt;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CancellationSignal;
 import android.provider.MediaStore;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -24,6 +38,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.tara.attendanceforstudent.Activities.DashboardActivity;
 import com.tara.attendanceforstudent.Models.StudentModel;
 import com.tara.attendanceforstudent.R;
@@ -33,6 +51,9 @@ import org.w3c.dom.Document;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class AddNewStudentActivity extends AppCompatActivity {
 
@@ -41,15 +62,21 @@ public class AddNewStudentActivity extends AppCompatActivity {
     TextView tvfingerprint;
     Spinner spdept, spdiv, spsem;
     FirebaseFirestore dbfirestore;
-    String fname, lname, mobile, fingerprint, address, parentmobile, email, dept, div, sem;
+    String fname, lname, mobile, fingerprint, address, parentmobile, email, dept, div, sem, filepath;
     StudentModel studentmodel;
+    BiometricPrompt biometricPrompt;
+    Executor executor;
+    AddNewStudentActivity activity = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_student);
         dbfirestore = FirebaseFirestore.getInstance();
+
         initforaddnewstudent();
+
+
     }
 
     @Override
@@ -75,6 +102,40 @@ public class AddNewStudentActivity extends AppCompatActivity {
         spdept = findViewById(R.id.spdepartment);
         spsem = findViewById(R.id.spsem);
         spdiv = findViewById(R.id.spDiv);
+
+
+        tvfingerprint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    executor = Executors.newSingleThreadExecutor();
+                    biometricPrompt = new BiometricPrompt.Builder(AddNewStudentActivity.this).setTitle(getString(R.string.fingerprint_header)).setNegativeButton("Cancel", executor, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    }).build();
+
+
+                    biometricPrompt.authenticate(new CancellationSignal(), executor, new BiometricPrompt.AuthenticationCallback() {
+                        @Override
+                        public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
+                            super.onAuthenticationSucceeded(result);
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(AddNewStudentActivity.this, "Add Successfully", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+
+
+        });
 
 
         spinnerData();
@@ -111,14 +172,11 @@ public class AddNewStudentActivity extends AppCompatActivity {
     }
 
 
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1 && resultCode == RESULT_OK)
-        {
+        if (requestCode == 1 && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap bitmap = (Bitmap) extras.get("data");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -128,12 +186,75 @@ public class AddNewStudentActivity extends AppCompatActivity {
             //set the image into imageview
             ivcaptureforstudent.setImageBitmap(bitmap);
 
+            uploadimage(databaos);
+
+
         }
 
 
     }
 
-        private void spinnerData() {
+    private void uploadimage(byte[] databaos) {
+
+        if (databaos != null) {
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading");
+            progressDialog.show();
+
+            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+
+            //name of the image file (add time to have different files to avoid rewrite on the same file)
+
+            String foldername = "Student";
+
+            StorageReference imagesRef = storageRef.child("Student/" + UUID.randomUUID().toString());
+            //send this name to database
+            //upload image
+            UploadTask uploadTask = imagesRef.putBytes(databaos);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                    progressDialog.dismiss();
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                    if (taskSnapshot.getMetadata() != null) {
+                        if (taskSnapshot.getMetadata().getReference() != null) {
+                            Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
+                            result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    filepath = uri.toString();
+                                    progressDialog.dismiss();
+                                    //    Toast.makeText(AddNewStudentActivity.this, "file"+filepath, Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+                        }
+                    }
+
+
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+
+                    double progress = 100.0 * (taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                    progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
+
+                }
+            });
+
+
+        }
+
+
+    }
+
+    private void spinnerData() {
 
         //Department Data save in Firestore
         CollectionReference collectionReference = dbfirestore.collection("Department");
@@ -220,6 +341,7 @@ public class AddNewStudentActivity extends AppCompatActivity {
         studentmodel.setDept(dept);
         studentmodel.setDiv(div);
         studentmodel.setSem(sem);
+        studentmodel.setImage(filepath);
 //        studentmodel.setFingerprint(fingerprint);
 
         documentReference.set(studentmodel).addOnCompleteListener(new OnCompleteListener<Void>() {

@@ -19,5 +19,6 @@
     <string name="Department">Department</string>
     <string name="Sem">Sem</string>
     <string name="Div">Div</string>
+    <string name="fingerprint_header">Place your Finger on the Device Now</string>
 
 </resources>

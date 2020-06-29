@@ -1,13 +1,13 @@
 package com.tara.attendanceforstudent.Models;
 
 public class StudentModel {
-    String firstname, lastname, mobile, address, fingerprint, parentmobile, email, dept, div, sem;
+    String firstname, lastname, mobile, address, fingerprint, parentmobile, email, dept, div, sem,image;
 
 
     public StudentModel() {
     }
 
-    public StudentModel(String firstname, String lastname, String mobile, String address, String fingerprint, String parentmobile, String email, String dept, String div, String sem) {
+    public StudentModel(String firstname, String lastname, String mobile, String address, String fingerprint, String parentmobile, String email, String dept, String div, String sem, String image) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.mobile = mobile;
@@ -18,6 +18,7 @@ public class StudentModel {
         this.dept = dept;
         this.div = div;
         this.sem = sem;
+        this.image = image;
     }
 
     public String getFirstname() {
@@ -60,6 +61,10 @@ public class StudentModel {
         return sem;
     }
 
+    public String getImage() {
+        return image;
+    }
+
     public void setFirstname(String firstname) {
         this.firstname = firstname;
     }
@@ -98,5 +103,9 @@ public class StudentModel {
 
     public void setSem(String sem) {
         this.sem = sem;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
