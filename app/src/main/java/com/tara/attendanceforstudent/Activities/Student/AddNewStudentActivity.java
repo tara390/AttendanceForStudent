@@ -1,20 +1,32 @@
 package com.tara.attendanceforstudent.Activities.Student;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricManager;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import de.hdodenhof.circleimageview.CircleImageView;
 
+import android.Manifest;
+import android.app.KeyguardManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+//import android.hardware.biometrics.BiometricPrompt;
 import android.hardware.biometrics.BiometricPrompt;
+import android.hardware.fingerprint.FingerprintManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CancellationSignal;
 import android.provider.MediaStore;
+import android.security.keystore.KeyGenParameterSpec;
+import android.security.keystore.KeyProperties;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +46,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -49,24 +66,37 @@ import com.tara.attendanceforstudent.R;
 import org.w3c.dom.Document;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+
 public class AddNewStudentActivity extends AppCompatActivity {
 
-    ImageView ivback, ivdone, ivcaptureforstudent;
+    ImageView ivback, ivdone;
+    CircleImageView ivcaptureforstudent;
     TextInputEditText etfirstname, etlastname, etemail, etaddress, etparentmobile, emobile;
-    TextView tvfingerprint;
+
     Spinner spdept, spdiv, spsem;
     FirebaseFirestore dbfirestore;
-    String fname, lname, mobile, fingerprint, address, parentmobile, email, dept, div, sem, filepath;
+    String fname, lname, mobile, address, parentmobile, email, dept, div, sem, filepath;
     StudentModel studentmodel;
     BiometricPrompt biometricPrompt;
     Executor executor;
     AddNewStudentActivity activity = this;
+    String Key_Name = "fingerprint";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,10 +104,21 @@ public class AddNewStudentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_new_student);
         dbfirestore = FirebaseFirestore.getInstance();
 
+        offlinedata();
+
+
         initforaddnewstudent();
 
 
     }
+
+    private void offlinedata() {
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build();
+        dbfirestore.setFirestoreSettings(settings);
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -95,7 +136,7 @@ public class AddNewStudentActivity extends AppCompatActivity {
         etparentmobile = findViewById(R.id.etparentsmobileno);
         etaddress = findViewById(R.id.edaddress);
         etemail = findViewById(R.id.etemail);
-        tvfingerprint = findViewById(R.id.tvfigerprint);
+
         ivback = findViewById(R.id.ivbackpressed);
         ivdone = findViewById(R.id.ivdone);
         ivcaptureforstudent = findViewById(R.id.ivcaptureforstudent);
@@ -104,38 +145,7 @@ public class AddNewStudentActivity extends AppCompatActivity {
         spdiv = findViewById(R.id.spDiv);
 
 
-        tvfingerprint.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    executor = Executors.newSingleThreadExecutor();
-                    biometricPrompt = new BiometricPrompt.Builder(AddNewStudentActivity.this).setTitle(getString(R.string.fingerprint_header)).setNegativeButton("Cancel", executor, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                        }
-                    }).build();
-
-
-                    biometricPrompt.authenticate(new CancellationSignal(), executor, new BiometricPrompt.AuthenticationCallback() {
-                        @Override
-                        public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
-                            super.onAuthenticationSucceeded(result);
-                            activity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(AddNewStudentActivity.this, "Add Successfully", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                    });
-                }
-            }
-
-
-        });
 
 
         spinnerData();
@@ -164,6 +174,10 @@ public class AddNewStudentActivity extends AppCompatActivity {
 
 
     }
+
+
+
+
 
     private void Opencamera() {
 
@@ -205,7 +219,7 @@ public class AddNewStudentActivity extends AppCompatActivity {
 
             //name of the image file (add time to have different files to avoid rewrite on the same file)
 
-            String foldername = "Student";
+
 
             StorageReference imagesRef = storageRef.child("Student/" + UUID.randomUUID().toString());
             //send this name to database
@@ -329,7 +343,7 @@ public class AddNewStudentActivity extends AppCompatActivity {
         sem = spsem.getSelectedItem().toString();
 
 
-        DocumentReference documentReference = dbfirestore.collection("Student").document();
+        final DocumentReference documentReference = dbfirestore.collection("Student").document();
 
         studentmodel = new StudentModel();
         studentmodel.setFirstname(fname);
@@ -344,21 +358,44 @@ public class AddNewStudentActivity extends AppCompatActivity {
         studentmodel.setImage(filepath);
 //        studentmodel.setFingerprint(fingerprint);
 
-        documentReference.set(studentmodel).addOnCompleteListener(new OnCompleteListener<Void>() {
+        dbfirestore.collection("Student").whereEqualTo("firstname", fname).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                        if (documentSnapshot.exists()) {
+                            Toast.makeText(AddNewStudentActivity.this, "Already exist", Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
-                    Toast.makeText(AddNewStudentActivity.this, "Store db sucessful in firstore" + studentmodel, Toast.LENGTH_SHORT).show();
+
                 }
+                if (task.getResult().size() == 0) {
+
+                    documentReference.set(studentmodel).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            etfirstname.setText("");
+                            etlastname.setText("");
+                            etemail.setText("");
+                            emobile.setText("");
+                            etparentmobile.setText("");
+                            etaddress.setText("");
+                            spdept.setSelected(false);
+
+                        }
+                    });
+
+                }
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(AddNewStudentActivity.this, "Fail entry in student", Toast.LENGTH_SHORT).show();
+                Log.e("TAG", e.getMessage());
+
             }
         });
-
     }
 
 

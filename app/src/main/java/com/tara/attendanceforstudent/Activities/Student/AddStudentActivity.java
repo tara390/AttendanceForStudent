@@ -40,7 +40,7 @@ public class AddStudentActivity extends AppCompatActivity {
         student_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(AddStudentActivity.this, TeacherRegistrationActivity.class);
+                Intent intent = new Intent(AddStudentActivity.this, ExisitingStudentActivity.class);
                 startActivity(intent);
             }
         });

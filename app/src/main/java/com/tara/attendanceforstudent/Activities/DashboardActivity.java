@@ -8,6 +8,7 @@ import android.view.View;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.tara.attendanceforstudent.Activities.Student.AddStudentActivity;
+import com.tara.attendanceforstudent.Activities.Subject.AddNewSubjectsActivity;
 import com.tara.attendanceforstudent.Activities.Teacher.ViewAnimation;
 import com.tara.attendanceforstudent.R;
 import com.tara.attendanceforstudent.ui.StudentReport.StudentReportFragment;
@@ -100,13 +101,16 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
 
             }
         });
+
+*/
+
         fabaddsubject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(DashboardActivity.this, "This is Subject Fragment", Toast.LENGTH_SHORT).show();
+                Intent i=new Intent(DashboardActivity.this, AddNewSubjectsActivity.class);
+                startActivity(i);
             }
         });
-*/
 
     }
 
