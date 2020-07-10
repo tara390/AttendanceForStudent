@@ -3,6 +3,7 @@ package com.tara.attendanceforstudent.Activities.Subject;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -123,8 +124,8 @@ public class AddNewSubjectsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(AddNewSubjectsActivity.this, DashboardActivity.class);
-        startActivity(i);
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_OK, returnIntent);
         finish();
         super.onBackPressed();
     }

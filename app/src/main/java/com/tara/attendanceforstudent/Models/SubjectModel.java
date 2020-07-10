@@ -24,8 +24,9 @@ public class SubjectModel {
         return sem;
     }
 
-    public void setSubjectname(String subjectname) {
+    public String setSubjectname(String subjectname) {
         this.subjectname = subjectname;
+        return subjectname;
     }
 
     public void setDepartment(String department) {

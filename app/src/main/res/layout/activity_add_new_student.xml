@@ -63,6 +63,7 @@
             android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
             android:elevation="1dp"
+            android:layout_margin="10dp"
             android:focusableInTouchMode="true"
             android:src="@drawable/profile" />
 

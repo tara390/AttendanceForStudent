@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,26 +24,29 @@ import com.tara.attendanceforstudent.R;
 
 import java.util.concurrent.TimeUnit;
 
-public class VerificationOtpscreenActivity extends AppCompatActivity {
+public class GetOtpActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     String mVerificationId, mobile;
     EditText edverificationcode;
     ProgressBar progressBar;
+    TextView tvphoneno;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_verification_otpscreen);
+        setContentView(R.layout.activity_get_otp);
 
         mAuth = FirebaseAuth.getInstance();
 
 
-        edverificationcode = findViewById(R.id.editTextCode);
-        progressBar = findViewById(R.id.progressbar);
-        mobile = getIntent().getStringExtra("mobile_no");
+        edverificationcode = findViewById(R.id.otpet);
+        mobile = getIntent().getStringExtra("phoneno");
+
+        tvphoneno = findViewById(R.id.tvmobileno);
+        tvphoneno.setText(mobile);
         sendVerificationcode(mobile);
 
-        findViewById(R.id.buttonSignIn).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btngetandverified).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -69,12 +73,12 @@ public class VerificationOtpscreenActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
 
                 if (task.isSuccessful()) {
-                    Intent intent = new Intent(VerificationOtpscreenActivity.this, DashboardActivity.class);
+                    Intent intent = new Intent(GetOtpActivity.this, ChangePasswordActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
 
                 } else {
-                    Toast.makeText(VerificationOtpscreenActivity.this, "Error in OnComplete...!!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GetOtpActivity.this, "Error in OnComplete...!!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -83,7 +87,6 @@ public class VerificationOtpscreenActivity extends AppCompatActivity {
 
     private void sendVerificationcode(String number) {
 
-        progressBar.setVisibility(View.VISIBLE);
         PhoneAuthProvider.getInstance().verifyPhoneNumber(number, 60, TimeUnit.SECONDS, TaskExecutors.MAIN_THREAD, mCallbacks);
     }
 
@@ -106,14 +109,12 @@ public class VerificationOtpscreenActivity extends AppCompatActivity {
             }
 
 
-
-
         }
 
         @Override
         public void onVerificationFailed(@NonNull FirebaseException e) {
 
-            Toast.makeText(VerificationOtpscreenActivity.this, "Error Ocurred" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(GetOtpActivity.this, "Error Ocurred" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     };
 }

@@ -1,14 +1,17 @@
 package com.tara.attendanceforstudent.Activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.tara.attendanceforstudent.Activities.Student.AddStudentActivity;
 import com.tara.attendanceforstudent.Activities.Subject.AddNewSubjectsActivity;
+import com.tara.attendanceforstudent.Activities.Subject.SubjectActivity;
 import com.tara.attendanceforstudent.Activities.Teacher.ViewAnimation;
 import com.tara.attendanceforstudent.R;
 import com.tara.attendanceforstudent.ui.StudentReport.StudentReportFragment;
@@ -26,6 +29,7 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
     FloatingActionButton fabadd, fabaddsubject, fabaddstudent;
     Fragment fragment = null;
     BottomNavigationView navView;
+    ImageView ivdashboardback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +45,21 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
 
         Floatinginit();
 
+        ivdashboardback=findViewById(R.id.ivdashboardback);
+        ivdashboardback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                onBackPressed();
+            }
+        });
 
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     private void Floatinginit() {
@@ -107,7 +125,7 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
         fabaddsubject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i=new Intent(DashboardActivity.this, AddNewSubjectsActivity.class);
+                Intent i=new Intent(DashboardActivity.this, SubjectActivity.class);
                 startActivity(i);
             }
         });

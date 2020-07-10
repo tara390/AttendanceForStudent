@@ -28,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
 
     TextInputEditText edusername, edpassword;
     Button btnsignin;
-    TextView tvregistrationforteacher;
+    TextView tvregistrationforteacher,tvforgetPassword;
     FirebaseFirestore firestore;
     String username, password;
     private static final int PERMISSION_REQUEST_CODE = 200;
@@ -75,6 +75,8 @@ public class LoginActivity extends AppCompatActivity {
         edpassword = findViewById(R.id.edpassword);
 
 
+
+
         edpassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
@@ -114,14 +116,29 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
+
+        //ForgetPassword
+        tvforgetPassword=findViewById(R.id.tvforgetPassword);
+        tvforgetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                username = edusername.getText().toString().trim();
+                Intent intent=new Intent(LoginActivity.this,ForgetPasswordActivity.class);
+                intent.putExtra("email",username);
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void checkforloginindatabase() {
 
+
+
         username = edusername.getText().toString().trim();
         password = edpassword.getText().toString().trim();
-
-
         firestore.collection("TeacherLogin").whereEqualTo("username", username).whereEqualTo("password", password)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -133,6 +150,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                                 intent.putExtra("username", username);
                                 startActivity(intent);
+                                finish();
 
                             } else {
                                 Toast.makeText(LoginActivity.this, "Username and Password is invalid,Please try again Later", Toast.LENGTH_SHORT).show();

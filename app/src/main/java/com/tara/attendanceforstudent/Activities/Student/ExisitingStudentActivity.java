@@ -65,7 +65,7 @@ public class ExisitingStudentActivity extends AppCompatActivity {
     private void setListforStudent() {
 
 
-        dbstudent.collectionGroup("Student")
+        dbstudent.collection("Student")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

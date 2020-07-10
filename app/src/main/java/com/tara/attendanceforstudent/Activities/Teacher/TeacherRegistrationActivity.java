@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -48,16 +49,18 @@ public class TeacherRegistrationActivity extends AppCompatActivity {
     TextInputEditText etusername, etpassword, etfirstname, etlastname, etaddress, etmobile_no;
     FirebaseFirestore firestore;
     DocumentReference documentReference;
-    String firstname, lastname, mobileno, address, username, password,dept,filepath;
+    String firstname, lastname, mobileno, address, username, password, dept, filepath;
     Spinner spdept;
-    ImageView back,done;
+    ImageView back, done;
     CircleImageView ivcaptureforteacher;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_registration);
         firestore = FirebaseFirestore.getInstance();
+
         initfornewteacherregistration();
 
     }
@@ -66,9 +69,9 @@ public class TeacherRegistrationActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         //Execute your code here
-       Intent i=new Intent(TeacherRegistrationActivity.this,LoginActivity.class);
-       startActivity(i);
-       finish();
+        Intent i = new Intent(TeacherRegistrationActivity.this, LoginActivity.class);
+        startActivity(i);
+        finish();
 
     }
 
@@ -80,7 +83,7 @@ public class TeacherRegistrationActivity extends AppCompatActivity {
         etusername = findViewById(R.id.etusername);
         etpassword = findViewById(R.id.etpassword);
 
-        ivcaptureforteacher=findViewById(R.id.ivcaptureforteacher);
+        ivcaptureforteacher = findViewById(R.id.ivcaptureforteacher);
 
         ivcaptureforteacher.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,16 +94,14 @@ public class TeacherRegistrationActivity extends AppCompatActivity {
 
 
         spdept = findViewById(R.id.spDept);
-        back=findViewById(R.id.back);
-        done=findViewById(R.id.done);
+        back = findViewById(R.id.back);
+        done = findViewById(R.id.done);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
             }
         });
-
-
 
 
         SpinnerData();
@@ -116,7 +117,7 @@ public class TeacherRegistrationActivity extends AppCompatActivity {
                 address = etaddress.getText().toString();
                 username = etusername.getText().toString();
                 password = etpassword.getText().toString();
-                dept=spdept.getSelectedItem().toString();
+                dept = spdept.getSelectedItem().toString();
                 savedatainclouddatabase();
             }
         });
@@ -163,7 +164,6 @@ public class TeacherRegistrationActivity extends AppCompatActivity {
             StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
             //name of the image file (add time to have different files to avoid rewrite on the same file)
-
 
 
             StorageReference imagesRef = storageRef.child("Teacher/" + UUID.randomUUID().toString());
@@ -214,7 +214,6 @@ public class TeacherRegistrationActivity extends AppCompatActivity {
     }
 
 
-
     private void SpinnerData() {
 
         CollectionReference collectionReference = firestore.collection("Department");
@@ -240,7 +239,6 @@ public class TeacherRegistrationActivity extends AppCompatActivity {
     private void savedatainclouddatabase() {
 
 
-
         final String phone_no = "+" + "91" + mobileno;
 
 
@@ -254,7 +252,7 @@ public class TeacherRegistrationActivity extends AppCompatActivity {
         teacherModel.setPassword(password);
         teacherModel.setDept(dept);
 
-        firestore.collection("TeacherLogin").whereEqualTo("firstname", firstname).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        firestore.collection("TeacherLogin").whereEqualTo("firstname", firstname).whereEqualTo("mobileno",phone_no).whereEqualTo("username",username).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -298,6 +296,4 @@ public class TeacherRegistrationActivity extends AppCompatActivity {
     }
 
 
-
-
-    }
+}

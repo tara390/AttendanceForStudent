@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:padding="10dp"
+        app:cardCornerRadius="10dp"
+        android:layout_margin="10dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.008" >
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:orientation="horizontal">
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:layout_weight="1">
+
+
+                <TextView
+                    android:id="@+id/tvSubjectname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.7"
+                    android:textSize="15sp"
+                    android:textColor="@color/colorPrimary"
+                    android:theme="@style/MyFilledBox"
+                    android:text="Subject Name"
+                    />
+
+              <requestFocus/>
+
+                <TextView
+                    android:id="@+id/tvdep"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.7"
+                    android:textSize="15sp"
+                    android:textColor="@color/colorPrimary"
+                    android:theme="@style/MyFilledBox"
+                    android:text="@string/Department"
+                    />
+
+                <requestFocus/>
+                <TextView
+                    android:id="@+id/tvse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.7"
+                    android:textSize="15sp"
+                    android:textColor="@color/colorPrimary"
+                    android:theme="@style/MyFilledBox"
+                    android:text="@string/Sem"
+                    />
+                <requestFocus/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
